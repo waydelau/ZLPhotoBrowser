@@ -50,6 +50,10 @@ class ZLPhotoPreviewController: UIViewController {
         view.isPagingEnabled = true
         view.showsHorizontalScrollIndicator = false
         
+        if UIView.appearance().semanticContentAttribute == .forceRightToLeft  {
+            view.semanticContentAttribute = .forceLeftToRight
+        }
+        
         ZLPhotoPreviewCell.zl.register(view)
         ZLGifPreviewCell.zl.register(view)
         ZLLivePhotoPreviewCell.zl.register(view)
@@ -834,6 +838,10 @@ class ZLPhotoPreviewSelectedView: UIView, UICollectionViewDataSource, UICollecti
         view.delegate = self
         view.showsHorizontalScrollIndicator = false
         view.alwaysBounceHorizontal = true
+        if UIView.appearance().semanticContentAttribute == .forceRightToLeft  {
+            view.semanticContentAttribute = .forceLeftToRight
+        }
+        
         ZLPhotoPreviewSelectedViewCell.zl.register(view)
         
         if #available(iOS 11.0, *) {
