@@ -66,12 +66,6 @@ public extension ZLPhotoConfiguration {
     }
     
     @discardableResult
-    func cellCornerRadio(_ cornerRadio: CGFloat) -> ZLPhotoConfiguration {
-        cellCornerRadio = cornerRadio
-        return self
-    }
-    
-    @discardableResult
     func allowSelectImage(_ value: Bool) -> ZLPhotoConfiguration {
         allowSelectImage = value
         return self
@@ -98,6 +92,12 @@ public extension ZLPhotoConfiguration {
     @discardableResult
     func allowTakePhotoInLibrary(_ value: Bool) -> ZLPhotoConfiguration {
         allowTakePhotoInLibrary = value
+        return self
+    }
+    
+    @discardableResult
+    func callbackDirectlyAfterTakingPhoto(_ value: Bool) -> ZLPhotoConfiguration {
+        callbackDirectlyAfterTakingPhoto = value
         return self
     }
     
@@ -282,30 +282,6 @@ public extension ZLPhotoConfiguration {
     }
     
     @discardableResult
-    func allowTakePhoto(_ value: Bool) -> ZLPhotoConfiguration {
-        allowTakePhoto = value
-        return self
-    }
-    
-    @discardableResult
-    func allowRecordVideo(_ value: Bool) -> ZLPhotoConfiguration {
-        allowRecordVideo = value
-        return self
-    }
-    
-    @discardableResult
-    func minRecordDuration(_ duration: Second) -> ZLPhotoConfiguration {
-        minRecordDuration = duration
-        return self
-    }
-    
-    @discardableResult
-    func maxRecordDuration(_ duration: Second) -> ZLPhotoConfiguration {
-        maxRecordDuration = duration
-        return self
-    }
-    
-    @discardableResult
     func cameraConfiguration(_ configuration: ZLCameraConfiguration) -> ZLPhotoConfiguration {
         cameraConfiguration = configuration
         return self
@@ -326,6 +302,30 @@ public extension ZLPhotoConfiguration {
     @discardableResult
     func showEnterSettingTips(_ value: Bool) -> ZLPhotoConfiguration {
         showEnterSettingTips = value
+        return self
+    }
+    
+    @discardableResult
+    func maxFrameCountForGIF(_ frameCount: Int) -> ZLPhotoConfiguration {
+        maxFrameCountForGIF = frameCount
+        return self
+    }
+    
+    @discardableResult
+    func gifPlayBlock(_ block: ((UIImageView, Data, [AnyHashable: Any]?) -> Void)?) -> ZLPhotoConfiguration {
+        gifPlayBlock = block
+        return self
+    }
+    
+    @discardableResult
+    func pauseGIFBlock(_ block: ((UIImageView) -> Void)?) -> ZLPhotoConfiguration {
+        pauseGIFBlock = block
+        return self
+    }
+    
+    @discardableResult
+    func resumeGIFBlock(_ block: ((UIImageView) -> Void)?) -> ZLPhotoConfiguration {
+        resumeGIFBlock = block
         return self
     }
     

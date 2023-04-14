@@ -151,25 +151,22 @@ class ViewController: UIViewController {
     }
     
     func showImagePicker(_ preview: Bool) {
-        
-        /**
         let minItemSpacing: CGFloat = 2
         let minLineSpacing: CGFloat = 2
         
         // Custom UI
         ZLPhotoUIConfiguration.default()
-            .navBarColor(.white)
-            .navViewBlurEffectOfAlbumList(nil)
-            .indexLabelBgColor(.black)
-            .indexLabelTextColor(.white)
+//            .navBarColor(.white)
+//            .navViewBlurEffectOfAlbumList(nil)
+//            .indexLabelBgColor(.black)
+//            .indexLabelTextColor(.white)
             .minimumInteritemSpacing(minItemSpacing)
             .minimumLineSpacing(minLineSpacing)
             .columnCountBlock { Int(ceil($0 / (428.0 / 4))) }
-         */
         
         // Custom image editor
-        let editImageConfiguration = ZLPhotoConfiguration.default().editImageConfiguration
-        editImageConfiguration
+        ZLPhotoConfiguration.default()
+            .editImageConfiguration
             .imageStickerContainerView(ImageStickerContainerView())
             .canRedo(true)
 //            .tools([.draw, .clip, .mosaic, .filter])
@@ -178,8 +175,16 @@ class ViewController: UIViewController {
 //            .imageStickerContainerView(ImageStickerContainerView())
 //            .filters([.normal, .process, ZLFilter(name: "custom", applier: ZLCustomFilter.hazeRemovalFilter)])
         
+        /*
+         ZLPhotoConfiguration.default()
+             .cameraConfiguration
+             .devicePosition(.front)
+             .allowRecordVideo(false)
+             .allowSwitchCamera(false)
+             .showFlashSwitch(true)
+          */
+        
         ZLPhotoConfiguration.default()
-            .editImageConfiguration(editImageConfiguration)
             // You can first determine whether the asset is allowed to be selected.
             .canSelectAsset { _ in
                 true
@@ -194,6 +199,28 @@ class ViewController: UIViewController {
                     debugPrint("No microphone authority")
                 }
             }
+            .gifPlayBlock { imageView, data, _ in
+                let animatedImage = FLAnimatedImage(gifData: data)
+                
+                var animatedImageView: FLAnimatedImageView?
+                for subView in imageView.subviews {
+                    if let subView = subView as? FLAnimatedImageView {
+                        animatedImageView = subView
+                        break
+                    }
+                }
+                
+                if animatedImageView == nil {
+                    animatedImageView = FLAnimatedImageView()
+                    imageView.addSubview(animatedImageView!)
+                }
+                
+                animatedImageView?.frame = imageView.bounds
+                animatedImageView?.animatedImage = animatedImage
+                animatedImageView?.runLoopMode = .default
+            }
+            .pauseGIFBlock { $0.subviews.forEach { ($0 as? FLAnimatedImageView)?.stopAnimating() } }
+            .resumeGIFBlock { $0.subviews.forEach { ($0 as? FLAnimatedImageView)?.startAnimating() } }
 //            .operateBeforeDoneAction { currVC, block in
 //                // Do something before select photo result callback, and then call block to continue done action.
 //                block()
@@ -410,6 +437,7 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFl
         
         ac.selectImageBlock = { [weak self] results, isOriginal in
             guard let `self` = self else { return }
+            self.selectedResults = results
             self.selectedImages = results.map { $0.image }
             self.selectedAssets = results.map { $0.asset }
             self.isOriginal = isOriginal

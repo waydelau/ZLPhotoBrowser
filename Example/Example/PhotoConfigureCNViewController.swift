@@ -109,7 +109,7 @@ class PhotoConfigureCNViewController: UIViewController {
     
     var customCameraSwitch: UISwitch!
     
-    var cameraFlashSegment: UISegmentedControl!
+    var cameraFlashSwitch: UISwitch!
     
     var customAlertSwitch: UISwitch!
     
@@ -291,7 +291,7 @@ class PhotoConfigureCNViewController: UIViewController {
             make.left.equalTo(previewCountLabel.snp.left)
         }
         
-        cellRadiusTextField = createTextField(String(format: "%.2f", config.cellCornerRadio), .decimalPad)
+        cellRadiusTextField = createTextField(String(format: "%.2f", uiConfig.cellCornerRadio), .decimalPad)
         containerView.addSubview(cellRadiusTextField)
         cellRadiusTextField.snp.makeConstraints { make in
             make.left.equalTo(cellRadiusLabel.snp.right).offset(horSpacing)
@@ -928,18 +928,18 @@ class PhotoConfigureCNViewController: UIViewController {
         }
         
         // 闪光灯模式
-        let cameraFlashLabel = createLabel("闪光灯模式")
+        let cameraFlashLabel = createLabel("闪光灯开关")
         containerView.addSubview(cameraFlashLabel)
         cameraFlashLabel.snp.makeConstraints { make in
             make.top.equalTo(customCameraLabel.snp.bottom).offset(velSpacing)
             make.left.equalTo(previewCountLabel.snp.left)
         }
         
-        cameraFlashSegment = UISegmentedControl(items: ["自动", "打开", "关闭"])
-        cameraFlashSegment.selectedSegmentIndex = config.cameraConfiguration.flashMode.rawValue
-        cameraFlashSegment.addTarget(self, action: #selector(cameraFlashSegmentChanged), for: .valueChanged)
-        containerView.addSubview(cameraFlashSegment)
-        cameraFlashSegment.snp.makeConstraints { make in
+        cameraFlashSwitch = UISwitch()
+        cameraFlashSwitch.isOn = config.cameraConfiguration.showFlashSwitch
+        cameraFlashSwitch.addTarget(self, action: #selector(cameraFlashChanged), for: .valueChanged)
+        containerView.addSubview(cameraFlashSwitch)
+        cameraFlashSwitch.snp.makeConstraints { make in
             make.left.equalTo(cameraFlashLabel.snp.right).offset(horSpacing)
             make.centerY.equalTo(cameraFlashLabel)
         }
@@ -1201,8 +1201,8 @@ class PhotoConfigureCNViewController: UIViewController {
         config.useCustomCamera = customCameraSwitch.isOn
     }
     
-    @objc func cameraFlashSegmentChanged() {
-        config.cameraConfiguration.flashMode = ZLCameraConfiguration.FlashMode(rawValue: cameraFlashSegment.selectedSegmentIndex)!
+    @objc func cameraFlashChanged() {
+        config.cameraConfiguration.showFlashSwitch = cameraFlashSwitch.isOn
     }
     
     @objc func customAlertChanged() {
@@ -1234,7 +1234,7 @@ extension PhotoConfigureCNViewController: UITextFieldDelegate {
         } else if textField == maxVideoDurationTextField {
             config.maxSelectVideoDuration = Int(textField.text ?? "") ?? 120
         } else if textField == cellRadiusTextField {
-            config.cellCornerRadio = CGFloat(Double(textField.text ?? "") ?? 0)
+            uiConfig.cellCornerRadio = CGFloat(Double(textField.text ?? "") ?? 0)
         } else if textField == autoScrollMaxSpeedTextField {
             config.autoScrollMaxSpeed = CGFloat(Double(textField.text ?? "") ?? 0)
         }
